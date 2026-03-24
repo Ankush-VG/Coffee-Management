@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrewHaven - Admin Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="admin-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <span>☕</span>
+                    <span>BrewHaven</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="active" data-page="dashboard" onclick="switchPage('dashboard')">
+                    <span class="nav-icon">📊</span>
+                    Dashboard
+                </a>
+                <a href="#" data-page="menu" onclick="switchPage('menu')">
+                    <span class="nav-icon">📋</span>
+                    Manage Menu
+                </a>
+                <a href="#" data-page="orders" onclick="switchPage('orders')">
+                    <span class="nav-icon">🛒</span>
+                    Orders
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="sidebar-user">
+                    <div class="sidebar-avatar" id="adminAvatar">A</div>
+                    <div class="sidebar-user-info">
+                        <div class="sidebar-user-name" id="adminName">Admin</div>
+                        <div class="sidebar-user-role">Administrator</div>
+                    </div>
+                </div>
+                <button class="btn btn-sm" style="width:100%;margin-top:12px;background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.2);" onclick="logout()">
+                    🚪 Logout
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Page -->
+            <div id="dashboardPage">
+                <div class="page-header">
+                    <div>
+                        <h1>Dashboard</h1>
+                        <p>Welcome back! Here's an overview of your cafe.</p>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="card stat-card">
+                        <div class="stat-icon orders">📦</div>
+                        <div class="stat-info">
+                            <h3 id="statTotalOrders">0</h3>
+                            <p>Total Orders</p>
+                        </div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-icon revenue">💰</div>
+                        <div class="stat-info">
+                            <h3 id="statRevenue">$0</h3>
+                            <p>Total Revenue</p>
+                        </div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-icon pending">⏳</div>
+                        <div class="stat-info">
+                            <h3 id="statPending">0</h3>
+                            <p>Pending Orders</p>
+                        </div>
+                    </div>
+                    <div class="card stat-card">
+                        <div class="stat-icon items">🍽️</div>
+                        <div class="stat-info">
+                            <h3 id="statItems">0</h3>
+                            <p>Menu Items</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Orders -->
+                <div class="card">
+                    <div class="card-header" style="display:flex;align-items:center;justify-content:space-between;">
+                        <h3 style="font-size:16px;font-weight:700;">Recent Orders</h3>
+                        <button class="btn btn-sm btn-outline" onclick="switchPage('orders')">View All</button>
+                    </div>
+                    <div class="card-body" style="padding:0;">
+                        <div class="table-wrapper" style="border:none;border-radius:0;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Customer</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recentOrdersTable">
+                                    <tr>
+                                        <td colspan="5">
+                                            <div class="empty-state" style="padding:40px;">
+                                                <p>Loading orders...</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Menu Management Page -->
+            <div id="menuPage" class="hidden">
+                <div class="page-header">
+                    <div>
+                        <h1>Manage Menu</h1>
+                        <p>Add, edit, and manage your cafe menu items.</p>
+                    </div>
+                    <button class="btn btn-primary" onclick="openMenuModal()">
+                        ➕ Add Item
+                    </button>
+                </div>
+
+                <div class="search-bar">
+                    <div class="search-input-wrapper">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" class="form-control" placeholder="Search menu items..." id="menuSearch" oninput="filterMenuTable()">
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body" style="padding:0;">
+                        <div class="table-wrapper" style="border:none;border-radius:0;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Image</th>
+                                        <th>Name</th>
+                                        <th>Category</th>
+                                        <th>Price</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="menuTable">
+                                    <tr>
+                                        <td colspan="6">
+                                            <div class="empty-state" style="padding:40px;">
+                                                <p>Loading menu items...</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orders Management Page -->
+            <div id="ordersPage" class="hidden">
+                <div class="page-header">
+                    <div>
+                        <h1>Orders</h1>
+                        <p>View and manage all customer orders.</p>
+                    </div>
+                </div>
+
+                <div class="tab-group">
+                    <button class="tab-btn active" onclick="filterOrders('all', this)">All</button>
+                    <button class="tab-btn" onclick="filterOrders('pending', this)">Pending</button>
+                    <button class="tab-btn" onclick="filterOrders('completed', this)">Completed</button>
+                    <button class="tab-btn" onclick="filterOrders('cancelled', this)">Cancelled</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-body" style="padding:0;">
+                        <div class="table-wrapper" style="border:none;border-radius:0;">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Order ID</th>
+                                        <th>Customer</th>
+                                        <th>Items</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                        <th>Date</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ordersTable">
+                                    <tr>
+                                        <td colspan="7">
+                                            <div class="empty-state" style="padding:40px;">
+                                                <p>Loading orders...</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Add/Edit Menu Item Modal -->
+    <div class="modal-overlay hidden" id="menuModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="menuModalTitle">Add Menu Item</h3>
+                <button class="toast-close" onclick="closeMenuModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <form id="menuForm" onsubmit="handleMenuSubmit(event)">
+                    <input type="hidden" id="menuItemId">
+                    <div class="form-group">
+                        <label>Item Name</label>
+                        <input type="text" class="form-control" id="menuItemName" placeholder="e.g. Cappuccino" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select class="form-control" id="menuItemCategory" required>
+                            <option value="">Select category</option>
+                            <option value="Coffee">Coffee</option>
+                            <option value="Tea">Tea</option>
+                            <option value="Pastry">Pastry</option>
+                            <option value="Dessert">Dessert</option>
+                            <option value="Food">Food</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Price ($)</label>
+                        <input type="number" class="form-control" id="menuItemPrice" placeholder="0.00" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Image URL</label>
+                        <input type="url" class="form-control" id="menuItemImage" placeholder="https://...">
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea class="form-control" id="menuItemDesc" placeholder="Brief description..." rows="3"></textarea>
+                    </div>
+                    <div class="modal-footer" style="padding:0;border:none;margin-top:8px;">
+                        <button type="button" class="btn btn-outline" onclick="closeMenuModal()">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="menuSubmitBtn">Add Item</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Details Modal -->
+    <div class="modal-overlay hidden" id="orderDetailModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Order Details</h3>
+                <button class="toast-close" onclick="closeOrderDetail()">✕</button>
+            </div>
+            <div class="modal-body" id="orderDetailContent">
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Delete Modal -->
+    <div class="modal-overlay hidden" id="deleteModal">
+        <div class="modal" style="max-width:400px;">
+            <div class="modal-header" style="background:var(--danger-light);">
+                <h3 style="color:var(--danger);">Confirm Delete</h3>
+                <button class="toast-close" onclick="closeDeleteModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <p style="text-align:center;font-size:15px;">Are you sure you want to delete <strong id="deleteItemName"></strong>? This action cannot be undone.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeDeleteModal()">Cancel</button>
+                <button class="btn btn-danger" id="confirmDeleteBtn" onclick="confirmDelete()">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Loading Spinner -->
+    <div class="spinner-overlay hidden" id="loadingSpinner">
+        <div class="spinner"></div>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>

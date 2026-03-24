@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrewHaven - Order Online</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="customer-nav">
+        <div class="container">
+            <div class="customer-nav-inner">
+                <div class="logo">
+                    <span class="logo-icon">☕</span>
+                    <span>BrewHaven</span>
+                </div>
+                <div class="nav-actions">
+                    <div class="nav-user">
+                        <span>👋</span>
+                        <span id="customerName">Guest</span>
+                    </div>
+                    <button class="cart-btn" onclick="toggleCart()">
+                        🛒
+                        <span class="cart-badge" id="cartCount">0</span>
+                    </button>
+                    <button class="btn btn-sm btn-outline" onclick="logout()">Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Menu Section -->
+    <section class="menu-section">
+        <div class="container">
+            <div class="section-title" style="margin-bottom:30px;">
+                <h2>Our Menu</h2>
+                <p>Discover our delicious selection of beverages and treats</p>
+            </div>
+
+            <!-- Search & Filters -->
+            <div class="search-bar" style="max-width:100%;margin-bottom:10px;">
+                <div class="search-input-wrapper" style="max-width:400px;">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" class="form-control" placeholder="Search menu..." id="customerSearch" oninput="filterMenu()" style="padding-left:42px;">
+                </div>
+            </div>
+
+            <div class="menu-filters" id="categoryFilters">
+                <button class="filter-btn active" onclick="setCategory('all', this)">All</button>
+                <!-- Dynamically filled -->
+            </div>
+
+            <!-- Menu Grid -->
+            <div class="menu-grid" id="menuGrid">
+                <!-- Dynamically filled -->
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state hidden" id="menuEmpty">
+                <div class="empty-state-icon">🍽️</div>
+                <h3>No items found</h3>
+                <p>Try adjusting your search or filter to find what you're looking for.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Order History -->
+    <section class="order-history-section">
+        <div class="container">
+            <div class="section-title" style="margin-bottom:30px;">
+                <h2>Your Orders</h2>
+                <p>Track your order history</p>
+            </div>
+
+            <div id="orderHistoryList">
+                <!-- Dynamically filled -->
+            </div>
+
+            <div class="empty-state hidden" id="ordersEmpty">
+                <div class="empty-state-icon">📦</div>
+                <h3>No orders yet</h3>
+                <p>Browse our menu and place your first order!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cart Overlay -->
+    <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+
+    <!-- Cart Drawer -->
+    <div class="cart-drawer" id="cartDrawer">
+        <div class="cart-header">
+            <h2>🛒 Your Cart</h2>
+            <button class="toast-close" onclick="toggleCart()" style="font-size:24px;">✕</button>
+        </div>
+
+        <div class="cart-items" id="cartItems">
+            <div class="empty-state" id="cartEmpty">
+                <div class="empty-state-icon">🛒</div>
+                <h3>Cart is empty</h3>
+                <p>Add items from the menu to get started.</p>
+            </div>
+        </div>
+
+        <div class="cart-footer" id="cartFooter" style="display:none;">
+            <div class="cart-total">
+                <span class="cart-total-label">Total</span>
+                <span class="cart-total-amount" id="cartTotal">$0.00</span>
+            </div>
+            <button class="place-order-btn" onclick="placeOrder()" id="placeOrderBtn">
+                Place Order
+            </button>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Loading Spinner -->
+    <div class="spinner-overlay hidden" id="loadingSpinner">
+        <div class="spinner"></div>
+    </div>
+
+    <script src="js/utils.js"></script>
+    <script src="js/customer.js"></script>
+</body>
+</html>
