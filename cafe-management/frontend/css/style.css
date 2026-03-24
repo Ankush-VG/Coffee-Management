@@ -968,12 +968,11 @@ tr:hover td {
 
 /* Tab Nav */
 .tab-group {
-    display: flex;
+    display: inline-flex;
     gap: 0;
     background: var(--bg-dark);
     border-radius: var(--radius-md);
     padding: 4px;
-    display: inline-flex;
     margin-bottom: 24px;
 }
 
@@ -1466,6 +1465,30 @@ tr:hover td {
 /* =============================================
    Responsive
    ============================================= */
+
+/* Mobile menu toggle for admin */
+.mobile-menu-btn {
+    display: none;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    width: 44px;
+    height: 44px;
+    border-radius: var(--radius-md);
+    font-size: 22px;
+    cursor: pointer;
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 200;
+    box-shadow: var(--shadow-md);
+    transition: var(--transition);
+}
+
+.mobile-menu-btn:hover {
+    background: var(--primary-light);
+}
+
 @media (max-width: 1024px) {
     .hero {
         grid-template-columns: 1fr;
@@ -1482,8 +1505,19 @@ tr:hover td {
     .stats-grid { grid-template-columns: repeat(2, 1fr); }
 
     .admin-layout { grid-template-columns: 1fr; }
-    .sidebar { display: none; }
-    .main-content { margin-left: 0; }
+    
+    .mobile-menu-btn { display: flex; align-items: center; justify-content: center; }
+    
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .sidebar.open {
+        transform: translateX(0);
+    }
+    
+    .main-content { margin-left: 0; padding-top: 70px; }
 }
 
 @media (max-width: 768px) {
@@ -1496,7 +1530,8 @@ tr:hover td {
 
     .cart-drawer { width: 100%; right: -100%; }
 
-    .nav-links { display: none; }
+    .nav-links { gap: 16px; }
+    .nav-links a { display: none; }
 
     .page-header { flex-direction: column; align-items: flex-start; gap: 16px; }
 }
@@ -1507,4 +1542,9 @@ tr:hover td {
     .hero-buttons .btn { width: 100%; }
 
     .menu-grid { grid-template-columns: 1fr; }
+
+    #about > .container > div:last-child {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
 }

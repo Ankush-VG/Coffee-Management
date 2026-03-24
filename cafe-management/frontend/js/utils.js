@@ -2,7 +2,7 @@
    Shared Utility Functions
    ============================================= */
 
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = window.location.origin + '/api';
 
 // ---- API Helper ----
 async function apiRequest(endpoint, options = {}) {
@@ -87,9 +87,10 @@ function formatCurrency(amount) {
 
 // ---- Escape HTML (prevent XSS) ----
 function escapeHtml(text) {
+    if (text == null) return '';
     const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
+    div.textContent = String(text);
+    return div.innerHTML.replace(/'/g, '&#39;').replace(/"/g, '&quot;');
 }
 
 // ---- Check Auth ----

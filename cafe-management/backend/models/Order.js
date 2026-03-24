@@ -76,8 +76,8 @@ const Order = {
 
     async getStats() {
         const [totalOrders] = await pool.query('SELECT COUNT(*) as count FROM orders');
-        const [totalRevenue] = await pool.query('SELECT COALESCE(SUM(total_amount), 0) as total FROM orders WHERE status = "completed"');
-        const [pendingOrders] = await pool.query('SELECT COUNT(*) as count FROM orders WHERE status = "pending"');
+        const [totalRevenue] = await pool.query("SELECT COALESCE(SUM(total_amount), 0) as total FROM orders WHERE status = 'completed'");
+        const [pendingOrders] = await pool.query("SELECT COALESCE(COUNT(*), 0) as count FROM orders WHERE status = 'pending'");
         const [totalItems] = await pool.query('SELECT COUNT(*) as count FROM menu_items');
 
         return {

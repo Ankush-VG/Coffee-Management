@@ -31,7 +31,7 @@ let currentCategory = 'all';
 async function loadMenu() {
     try {
         const data = await apiRequest('/menu');
-        menuItems = data.data;
+        menuItems = data.data.filter(item => item.available);
 
         // Build category filters
         const categories = [...new Set(menuItems.map(i => i.category))];

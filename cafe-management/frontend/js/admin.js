@@ -6,6 +6,11 @@ let allMenuItems = [];
 let allOrders = [];
 let deleteItemId = null;
 
+// ---- Mobile Sidebar Toggle ----
+function toggleSidebar() {
+    document.querySelector('.sidebar').classList.toggle('open');
+}
+
 // ---- Initialize ----
 (async function init() {
     const user = await checkAuth();

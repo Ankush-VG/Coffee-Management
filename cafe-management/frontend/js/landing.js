@@ -80,7 +80,6 @@ async function handleSignup(e) {
     const name = document.getElementById('signupName').value.trim();
     const email = document.getElementById('signupEmail').value.trim();
     const password = document.getElementById('signupPassword').value;
-    const role = document.getElementById('signupRole').value;
 
     if (!name || !email || !password) {
         showToast('error', 'Error', 'Please fill in all fields');
@@ -90,7 +89,7 @@ async function handleSignup(e) {
     try {
         const data = await apiRequest('/auth/signup', {
             method: 'POST',
-            body: JSON.stringify({ name, email, password, role })
+            body: JSON.stringify({ name, email, password })
         });
 
         showToast('success', 'Account Created!', 'Redirecting...');

@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS order_items (
     quantity INT NOT NULL DEFAULT 1,
     price DECIMAL(10, 2) NOT NULL,
     FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE,
-    FOREIGN KEY (item_id) REFERENCES menu_items(id) ON DELETE CASCADE
+    FOREIGN KEY (item_id) REFERENCES menu_items(id) ON DELETE RESTRICT
 );
 
 -- =============================================
@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS order_items (
 -- =============================================
 
 -- Admin user (password: admin123)
-INSERT INTO users (name, email, password, role) VALUES
+INSERT IGNORE INTO users (name, email, password, role) VALUES
 ('Admin User', 'admin@cafe.com', 'admin123', 'admin'),
 ('John Doe', 'john@example.com', 'john123', 'customer'),
 ('Jane Smith', 'jane@example.com', 'jane123', 'customer'),
@@ -77,12 +77,12 @@ INSERT INTO menu_items (name, category, price, image_url, description) VALUES
 ('Club Sandwich', 'Food', 7.50, 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=400', 'Triple-decker club sandwich with fries'),
 ('Caesar Salad', 'Food', 6.50, 'https://images.unsplash.com/photo-1546793665-c74683f339c1?w=400', 'Fresh caesar salad with croutons and parmesan');
 
--- Sample orders
+-- Sample orders (totals match items below)
 INSERT INTO orders (user_id, total_amount, status) VALUES
-(2, 12.75, 'completed'),
-(3, 8.50, 'pending'),
-(4, 15.25, 'completed'),
-(2, 9.00, 'pending');
+(2, 14.25, 'completed'),
+(3, 7.50, 'pending'),
+(4, 18.25, 'completed'),
+(2, 9.25, 'pending');
 
 -- Sample order items
 INSERT INTO order_items (order_id, item_id, quantity, price) VALUES

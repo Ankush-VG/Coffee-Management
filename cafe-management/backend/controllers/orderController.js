@@ -1,4 +1,5 @@
 const Order = require('../models/Order');
+const MenuItem = require('../models/MenuItem');
 
 const orderController = {
     // POST /api/orders
@@ -11,17 +12,28 @@ const orderController = {
                 return res.status(400).json({ success: false, message: 'Order must contain at least one item' });
             }
 
+            // Validate items and get server-side prices
             let totalAmount = 0;
+            const validatedItems = [];
             for (const item of items) {
-                if (!item.item_id || !item.quantity || !item.price) {
-                    return res.status(400).json({ success: false, message: 'Each item must have item_id, quantity, and price' });
+                if (!item.item_id || !item.quantity || item.quantity < 1) {
+                    return res.status(400).json({ success: false, message: 'Each item must have a valid item_id and quantity' });
                 }
-                totalAmount += item.price * item.quantity;
+                const menuItem = await MenuItem.getById(item.item_id);
+                if (!menuItem || !menuItem.available) {
+                    return res.status(400).json({ success: false, message: `Item "${menuItem ? menuItem.name : item.item_id}" is not available` });
+                }
+                validatedItems.push({
+                    item_id: item.item_id,
+                    quantity: item.quantity,
+                    price: menuItem.price  // Use server-side price, not client-sent
+                });
+                totalAmount += menuItem.price * item.quantity;
             }
 
             totalAmount = Math.round(totalAmount * 100) / 100;
 
-            const orderId = await Order.create(userId, totalAmount, items);
+            const orderId = await Order.create(userId, totalAmount, validatedItems);
             const order = await Order.getById(orderId);
             const orderItems = await Order.getOrderItems(orderId);
 

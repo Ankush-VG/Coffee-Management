@@ -1,13 +1,20 @@
+const bcrypt = require('bcrypt');
 const User = require('../models/User');
+
+const SALT_ROUNDS = 10;
 
 const authController = {
     // POST /api/auth/signup
     async signup(req, res) {
         try {
-            const { name, email, password, role } = req.body;
+            const { name, email, password } = req.body;
 
             if (!name || !email || !password) {
                 return res.status(400).json({ success: false, message: 'Name, email, and password are required' });
+            }
+
+            if (password.length < 4) {
+                return res.status(400).json({ success: false, message: 'Password must be at least 4 characters' });
             }
 
             const existing = await User.findByEmail(email);
@@ -15,7 +22,8 @@ const authController = {
                 return res.status(409).json({ success: false, message: 'Email already registered' });
             }
 
-            const userId = await User.create(name, email, password, role || 'customer');
+            const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+            const userId = await User.create(name, email, hashedPassword, 'customer');
             const user = await User.findById(userId);
 
             req.session.user = user;
@@ -36,7 +44,19 @@ const authController = {
             }
 
             const user = await User.findByEmail(email);
-            if (!user || user.password !== password) {
+            if (!user) {
+                return res.status(401).json({ success: false, message: 'Invalid email or password' });
+            }
+
+            // Support both bcrypt hashed and legacy plaintext passwords
+            let passwordValid = false;
+            if (user.password.startsWith('$2b$') || user.password.startsWith('$2a$')) {
+                passwordValid = await bcrypt.compare(password, user.password);
+            } else {
+                passwordValid = (user.password === password);
+            }
+
+            if (!passwordValid) {
                 return res.status(401).json({ success: false, message: 'Invalid email or password' });
             }
 
